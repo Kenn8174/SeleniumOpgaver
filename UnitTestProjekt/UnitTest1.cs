@@ -4,6 +4,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System.Collections.Generic;
 using System.Linq;
+using OpenQA.Selenium.Support.UI;
+using System;
 
 namespace UnitTestProjekt
 {
@@ -215,7 +217,7 @@ namespace UnitTestProjekt
         }
 
         [TestMethod]
-        public void Exercise_4_2_CheckIfCheckBoxProfessionIsCorrect()
+        public void Exercise_4_3_CheckIfCheckBoxProfessionIsCorrect()
         {
             // ARANGE
             string url = "http://toolsqa.com/automation-practice-form/";
@@ -245,6 +247,124 @@ namespace UnitTestProjekt
             // ASSERT
             Assert.IsTrue(expected);
         }
+
+
+        #endregion
+
+
+        #region Practice Exercise – Til afsnit Forms Del 2
+
+
+        [TestMethod]
+        public void Exercise_5_CheckIfDropdownListCanSelectSpecificValue()
+        {
+            // ARANGE
+            string url = "http://toolsqa.com/automation-practice-form/";
+            string expected = "";
+            string actual = "Europe";
+
+            // ACT
+            chromeDriver.Url = url;
+
+            chromeDriver.FindElement(By.Id("cookie_action_close_header")).Click();
+
+            IWebElement dropdownContinent = chromeDriver.FindElement(By.Id("continents"));
+
+            SelectElement selectContinent = new SelectElement(dropdownContinent);
+
+            //selectContinent.SelectByIndex(1);
+            //selectContinent.SelectByText("Africa");
+
+            IList<IWebElement> continentList = selectContinent.Options;
+
+            foreach (var continents in continentList)
+            {
+                if (continents.Text == "Europe")
+                {
+                    selectContinent.SelectByText(continents.Text);
+                    expected = continents.Text;
+                }
+            }
+
+            //bool expected = dropdownContinent.Selected;
+
+            chromeDriver.Close();
+
+            // ASSERT
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
+
+        #region Practice Exercise – Til afsnit Waiting
+
+
+        [TestMethod]
+        public void Exercise_6_CheckIfImpicitWaitWorks()
+        {
+            // ARANGE
+            string url = "http://toolsqa.com/automation-practice-switch-windows/";
+            string expected = "";
+            string actual = "New Element0";
+
+            // ACT
+            chromeDriver.Url = url;
+
+            chromeDriver.FindElement(By.Id("cookie_action_close_header")).Click();
+
+            chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(30);
+
+            chromeDriver.FindElement(By.Id("target"));
+
+            expected = chromeDriver.FindElement(By.Id("target")).Text;
+
+            chromeDriver.Close();
+
+            // ASSERT
+            Assert.AreEqual(expected, actual);
+        }
+
+
+
+        #endregion
+
+
+
+        #region Practice Exercise – Til afsnit Explicit Waiting
+
+
+        [TestMethod]
+        public void Exercise_7_CheckIfImpicitWaitWorks()
+        {
+            // ARANGE
+            string url = "http://toolsqa.com/automation-practice-switch-windows/";
+            bool condition;
+
+            // ACT
+            chromeDriver.Url = url;
+
+            chromeDriver.FindElement(By.Id("cookie_action_close_header")).Click();
+
+            WebDriverWait wait = new WebDriverWait(chromeDriver, TimeSpan.FromMinutes(1));
+            try
+            {
+                wait.Until(x => x.Url == string.Empty);
+            }
+            catch (Exception)
+            {
+                condition = false;
+            }
+            finally
+            {
+                condition = true;
+                chromeDriver.Close();
+            }
+
+            // ASSERT
+            Assert.IsTrue(condition);
+        }
+
 
 
         #endregion

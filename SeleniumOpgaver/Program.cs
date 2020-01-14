@@ -183,7 +183,7 @@ namespace SeleniumOpgaver
             autoToolCheckbox.Click();*/
 
 
-            #endregion Del 1
+            #endregion
 
 
             #region Practice Exercise – Til afsnit Forms Del 2
